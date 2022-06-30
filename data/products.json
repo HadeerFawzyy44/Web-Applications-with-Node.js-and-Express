@@ -1,0 +1,31 @@
+[
+    {"id":"1",
+    "name":"Product1",
+    "image":"./images/product-01.jpg",
+    "description":"This is an awesome Product!"},
+    
+    {"id":"2",
+        "name":"Product2",
+        "image":"./images/product-02.jpg",
+        "description":"This is an awesome Product!"},
+    
+    {"id":"3",
+    "name":"Product3",
+    "image":"./images/product-03.jpg",
+    "description":"This is an awesome Product!"},
+     
+    {"id":"4",
+        "name":"Product4",
+        "image":"./images/product-04.jpg",
+        "description":"This is an awesome Product!"},
+         
+    {"id":"5",
+        "name":"Product5",
+        "image":"./images/product-05.jpg",
+        "description":"This is an awesome Product!"},
+         
+    {"id":"6",
+        "name":"Product6",
+        "image":"./images/product-06.jpg",
+        "description":"This is an awesome Product!"}
+    ]
