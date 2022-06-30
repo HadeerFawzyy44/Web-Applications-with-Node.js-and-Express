@@ -4,7 +4,13 @@ const debug = require('debug')('app:productsrouter');
 const { MongoClient , ObjectID } = require('mongodb');
 const productsrouter =express.Router()
 
-
+productsrouter.use((req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.redirect('/auth/SignIn');
+  }
+});
 productsrouter.route('/').get((req,res)=>{
  //res.render('products')
     // const url="mongodb://hadeerfawzy:1234@onlinestore-shard-00-00.wgest.mongodb.net:27017,onlinestore-shard-00-01.wgest.mongodb.net:27017,onlinestore-shard-00-02.wgest.mongodb.net:27017/?ssl=true&replicaSet=atlas-i5c8on-shard-0&authSource=admin&retryWrites=true&w=majority";

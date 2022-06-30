@@ -3,13 +3,12 @@ const { greenBright } = require("chalk");
 const authRoutes = express.Router();
 const passport = require("passport");
 const debug = require("debug")("app:authRoutes");
-const { MongoClient } = require("mongodb");
+const { MongoClient,ObjectID } = require("mongodb");
 
 authRoutes.route("/SignUp").post((req, res) => {
   //create user in database
   const { username, email, password } = req.body;
-  let url =
-    "mongodb://hadeerfawzy:1234@onlinestore-shard-00-00.4svyk.mongodb.net:27017,onlinestore-shard-00-01.4svyk.mongodb.net:27017,onlinestore-shard-00-02.4svyk.mongodb.net:27017/?ssl=true&replicaSet=atlas-lasclr-shard-0&authSource=admin&retryWrites=true&w=majority";
+  let url ="mongodb://hadeerfawzy:1234@onlinestore-shard-00-00.4svyk.mongodb.net:27017,onlinestore-shard-00-01.4svyk.mongodb.net:27017,onlinestore-shard-00-02.4svyk.mongodb.net:27017/?ssl=true&replicaSet=atlas-lasclr-shard-0&authSource=admin&retryWrites=true&w=majority";
   const dbName = "ONLINESTORE";
   (async function mongo() {
     let client;
@@ -19,15 +18,17 @@ authRoutes.route("/SignUp").post((req, res) => {
 
       const db = client.db(dbName);
       const user = { username, email, password };
+      //insert user
       const results = await db.collection("users").insertOne(user);
       debug(results);
-      // const userinfo = await db.collection('users').findOne({ _id:new ObjectID(results.insertedId) })
-      // debug(userinfo)
-      req.login(results.ops[0], () => {
+      //get userinfo from database if inserted
+      const userinfo = await db.collection('users').findOne({ _id:new ObjectID(results.insertedId) })
+      debug(userinfo)
+      req.login(userinfo, () => {
         res.redirect("/auth/profile");
       });
     } catch (error) {
-      debug(error.stack);
+    debug(error.stack);
     }
     client.close();
   })();
@@ -38,5 +39,17 @@ authRoutes.route("/profile").get((req, res) => {
   console.log(req.user);
   res.render("profile", { user });
 });
+
+authRoutes.route("/SignIn").get((req,res)=>{
+  res.render("signin");
+})
+.post(
+  passport.authenticate('local', {
+    successRedirect: '/auth/profile',
+    failureRedirect: '/',
+  })
+);
+
+
 
 module.exports = authRoutes;
