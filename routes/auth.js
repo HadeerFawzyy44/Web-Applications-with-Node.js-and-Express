@@ -5,7 +5,7 @@ const passport = require("passport");
 const debug = require("debug")("app:authRoutes");
 const { MongoClient,ObjectID } = require("mongodb");
 
-authRoutes.route("/SignUp").post((req, res) => {
+authRoutes.route("/register").post((req, res) => {
   //create user in database
   const { username, email, password } = req.body;
   let url ="mongodb://hadeerfawzy:1234@onlinestore-shard-00-00.4svyk.mongodb.net:27017,onlinestore-shard-00-01.4svyk.mongodb.net:27017,onlinestore-shard-00-02.4svyk.mongodb.net:27017/?ssl=true&replicaSet=atlas-lasclr-shard-0&authSource=admin&retryWrites=true&w=majority";
@@ -40,7 +40,7 @@ authRoutes.route("/profile").get((req, res) => {
   res.render("profile", { user });
 });
 
-authRoutes.route("/SignIn").get((req,res)=>{
+authRoutes.route("/login").get((req,res)=>{
   res.render("signin");
 })
 .post(
