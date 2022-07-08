@@ -4,34 +4,27 @@ const authRoutes = express.Router();
 const passport = require("passport");
 const debug = require("debug")("app:authRoutes");
 const { MongoClient,ObjectID } = require("mongodb");
+const User = require('../models/user')
 
 authRoutes.route("/register").post((req, res) => {
   //create user in database
+  try{
   const { username, email, password } = req.body;
-  let url ="mongodb://hadeerfawzy:1234@onlinestore-shard-00-00.4svyk.mongodb.net:27017,onlinestore-shard-00-01.4svyk.mongodb.net:27017,onlinestore-shard-00-02.4svyk.mongodb.net:27017/?ssl=true&replicaSet=atlas-lasclr-shard-0&authSource=admin&retryWrites=true&w=majority";
-  const dbName = "ONLINESTORE";
-  (async function mongo() {
-    let client;
-    try {
-      client = await MongoClient.connect(url);
-      debug("Connected to the mongo DB");
-
-      const db = client.db(dbName);
-      const user = { username, email, password };
-      //insert user
-      const results = await db.collection("users").insertOne(user);
-      debug(results);
-      //get userinfo from database if inserted
-      const userinfo = await db.collection('users').findOne({ _id:new ObjectID(results.insertedId) })
-      debug(userinfo)
-      req.login(userinfo, () => {
-        res.redirect("/auth/profile");
-      });
-    } catch (error) {
+  const user = new User({username:username , email:email , password:password})
+     user.save()
+          .then(
+            result=>{
+              req.login(user, () => {
+                res.redirect("/auth/profile");
+              });
+            }
+          )
+          .catch(
+            err=> console.log(err)
+          )
+  }catch(error){
     debug(error.stack);
-    }
-    client.close();
-  })();
+  }
 });
 
 authRoutes.route("/profile").get((req, res) => {

@@ -1,5 +1,6 @@
 
 const express= require('express')
+const mongosse = require('mongoose')
 const path = require('path')
 const chalk = require('chalk');
 const debug = require('debug')('app');
@@ -34,7 +35,15 @@ app.get('/',(req,res,next)=>{
 
     res.render('index')
    })
-//app.use(res.status(404).render('404', { pageTitle: 'Page Not Found', path: '/404' }))
+
    
 
-app.listen(PORT)
+//app.listen(PORT)
+mongosse.connect("mongodb://hadeerfawzy:1234@onlinestore-shard-00-00.4svyk.mongodb.net:27017,onlinestore-shard-00-01.4svyk.mongodb.net:27017,onlinestore-shard-00-02.4svyk.mongodb.net:27017/ONLINESTORE?ssl=true&replicaSet=atlas-lasclr-shard-0&authSource=admin&retryWrites=true&w=majority")
+.then(
+    result=>{
+        app.listen(PORT);
+    })
+.catch(
+    error => { console.log(error) 
+})
